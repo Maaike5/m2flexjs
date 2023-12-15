@@ -13,10 +13,12 @@ const ingamestate_end=0;
 let gameState = gamestate_start;
 let ingameState = ingamestate_start;
 
+let images ={};
+
 let boardPositionSize= 50;
 let pawnPositions= [];
 let boardPositions= [];
-let playeramountButtons= [];
+let playerAmountButtons= [];
 
 function createRect(x,y,w,h){
     let rectangle = {
@@ -75,30 +77,33 @@ function initGame(){
     for (let i = 0; i < 4; i++) {
     let button = createRect(uiWindow.x + 5 + i * 55, uiWindow.y + 50,50,50);
     playerAmountButtons[i] = button
-    button.playerAmount=i + 1;
+    button.playerAmount= i + 1;
     }
 }
 
-function drawGameStart(){
+function drawGameStart()
+{
     for (let i = 0; i < playerAmountButtons.length; i++) {
         g.fillStyle = "#004400";
         g.fillRect(playerAmountButtons[i].x, playerAmountButtons[i].y, playerAmountButtons[i].h, playerAmountButtons[i].w);
         g.fillStyle = "#FFFFFF";
         g.fillText((i + 1) + "", playerAmountButtons[i].x, playerAmountButtons[i].y + 20);
+        g.drawImage(images["pawn" + i + ".png"], playerAmountButtons[i].x, playerAmountButtons[i].y, playerAmountButtons[i].w, playerAmountButtons[i].h)
     }
+    g.fillText("Click the amount of players to start", uiWindow.x, uiWindow.y);
 }
 
 
 
 function drawIngame(){
-    for(let i =0 ; i<boardPositions.length;i++)
+    for(let i = 0 ; i < boardPositions.length; i++)
     {
         let pos = boardPositions[i];
 
         g.fillStyle  = "#004400";
         g.fillRect(pos.x,pos.y,pos.h,pos.w);
         g.fillStyle  = "#FFFFFF";
-        g.fillText((i+1)+"",pos.x,pos.y+20);
+        g.fillText((i + 1)+ "", pos.x, pos.y +20);
     }    
 }
 
@@ -107,5 +112,43 @@ function drawGameOver()
 
 }
 
-initGame()
-draw()
+function loadImages()
+{
+    let sources = [
+        "img/dice1.png", "img/dice2.png", "img/dice3.png", "img/dice4.png", "img/dice5.png", "img/dice6.png",
+        "img/pawn0.png", "img/pawn1.png", "img/pawn2.png", "img/pawn3.png", 
+        "img/snakes.png", 
+        "img/trophy.png", 
+        "img/window.png", 
+    ];
+    
+    let scope = this;
+
+    let loaded = 0;
+    for (let i = 0; i < sources.length; i++)
+    {
+        let img = new Image();
+
+
+        img.onload = function ()
+        {
+            loaded++;
+            if (loaded == sources.length)
+            {
+                imageLoaded();
+            }
+        };
+        img.src = sources[i];
+
+        images[ sources[i].replace("img/","")] = img;
+    }
+}
+
+function imageLoaded()
+{
+    initGame()
+    draw()
+}
+
+
+loadImages()
