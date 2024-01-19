@@ -20,6 +20,12 @@ let pawnPositions= [];
 let boardPositions= [];
 let playerAmountButtons= [];
 
+let pos = pawnPositions[i];
+let boardI = pos.boardI;
+
+let boardpos = boardPositions[boardI];
+let pawnSize = boardPositionSize/2;
+
 function createRect(x,y,w,h){
     let rectangle = {
         x:x,
@@ -175,7 +181,21 @@ function inRect(px,py,rect){
 
 function startGame(playerAmount)
 {
+    gameState = gamestate_ingame;
+    ingameState = ingamestate_start;
+    pawnPositions=[]// maak een nieuwe pionnen lijst
+    playerTurn= 0;
+    winner=-1;
+    console.log("playerAmount " + playerAmount);
+    for(let i = 0; i < playerAmount; i++)
+    {
+        let newPawn = createPawn(i); 
+        pawnPositions.push(newPawn);
+    }
+}
 
+function createPawn(playerI){
+  return  { boardI:0,playerI:playerI};
 }
 
 
