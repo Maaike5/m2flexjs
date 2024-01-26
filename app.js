@@ -15,16 +15,11 @@ let ingameState = ingamestate_start;
 
 let images ={};
 
-let boardPositionSize= 50;
-let pawnPositions= [];
-let boardPositions= [];
-let playerAmountButtons= [];
+let boardPositionSize = 50
+let pawnPositions = []
+let boardPositions =[]
+let playerAmountButtons = []
 
-let pos = pawnPositions[i];
-let boardI = pos.boardI;
-
-let boardpos = boardPositions[boardI];
-let pawnSize = boardPositionSize/2;
 
 function createRect(x,y,w,h){
     let rectangle = {
@@ -45,9 +40,13 @@ function clearCanvas(){
 
 function draw()
 {
-    clearCanvas();
-    drawGameStart();
-    drawIngame();
+    clearCanvas()
+    if (gameState == gamestate_start) {
+        drawGameStart()
+    }
+    if (gameState == gamestate_ingame) {
+        drawIngame()
+    }
 }    
 
 function createBoardPositions()
@@ -100,17 +99,32 @@ function drawGameStart()
 }
 
 
-
-function drawIngame(){
-    for(let i = 0 ; i < boardPositions.length; i++)
-    {
+function drawIngame() {
+    for (let i = 0; i < boardPositions.length; i++) {
         let pos = boardPositions[i];
 
-        g.fillStyle  = "#004400";
-        g.fillRect(pos.x,pos.y,pos.h,pos.w);
-        g.fillStyle  = "#FFFFFF";
-        g.fillText((i + 1)+ "", pos.x, pos.y +20);
-    }    
+        g.fillStyle = "#004400";
+        g.fillRect(pos.x, pos.y, pos.h, pos.w);
+        g.fillStyle = "#FFFFFF";
+        g.fillText((i + 1) + "", pos.x, pos.y + 20);
+    }
+
+    let x = 0
+    let y = 0
+    for (let i = 0; i < pawnPositions.length; i++) {
+        let pos = pawnPositions[i]
+        let boardI = pos.boardI
+
+        let boardpos = boardPositions[boardI]
+        let pawnSize = boardPositionSize / 2
+        g.drawImage(images["pawn" + i + ".png"], boardpos.x + (x) * pawnSize, boardpos.y + (y)*pawnSize, boardpos.w / 2, boardpos.h / 2)
+        x++;
+        if(x == 2){
+            x = 0
+            y += 1
+        }
+    }
+    g.drawImage(images["snakes.png"], 0, 55, 600, 600)
 }
 
 function drawGameOver()
@@ -179,22 +193,22 @@ function inRect(px,py,rect){
     return result
 }
 
-function startGame(playerAmount)
-{
-    gameState = gamestate_ingame;
-    ingameState = ingamestate_start;
-    pawnPositions=[]// maak een nieuwe pionnen lijst
-    playerTurn= 0;
-    winner=-1;
-    console.log("playerAmount " + playerAmount);
-    for(let i = 0; i < playerAmount; i++)
-    {
-        let newPawn = createPawn(i); 
-        pawnPositions.push(newPawn);
+function startGame(playerAmount) {
+    gameState = gamestate_ingame
+    ingameState = ingamestate_start
+    pawnPositions = []
+    playerTurn = 0
+    winner = -1
+    console.log("playerAmount " + playerAmount)
+    for (let i = 0; i < playerAmount; i++) {
+        pawnPositions.push(createPawn(i))
     }
+
+    draw()
 }
 
-function createPawn(playerI){
+function createPawn(playerI)
+{
   return  { boardI:0,playerI:playerI};
 }
 
